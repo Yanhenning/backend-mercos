@@ -18,7 +18,8 @@ class UsuarioRetrieveApiView(RetrieveAPIView):
     permission_classes = (AllowAny, )
     renderer_classes = (UsuarioJSONRenderer, )
     serializer_class = UsuarioSerializer
-    def retrieve(self, request, usuario, *args, **kwargs):
-      usuario = Usuario.objects.get(id = usuario.id) 
+    
+    def get(self, request, *args, **kwargs):
+      usuario = Usuario.objects.get(id = kwargs['usuario_id']) 
       serializer = self.serializer_class(usuario)
       return Response(serializer.data, status = status.HTTP_200_OK)
