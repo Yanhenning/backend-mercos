@@ -1,2 +1,5 @@
-# backend-mercos
-Um repositório privado para o teste técnico para a mercos
+﻿# backend-mercos
+
+### Diagrama do banco de dados
+
+![dbdiagram](/assets/mercos-diagram.png)
