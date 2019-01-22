@@ -2,4 +2,4 @@
 
 ### Diagrama do banco de dados
 
-![dbdiagram](/assets/mercos-diagram.PNG){: .center-image}
+![dbdiagram](/assets/mercos-diagram.PNG)
