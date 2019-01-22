@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models.usuario import Usuario
+from backend_mercos.models.usuario import Usuario
 
 class UsuarioListSerializer(serializers.ModelSerializer):
     nome = serializers.CharField(max_length=200, required = True)

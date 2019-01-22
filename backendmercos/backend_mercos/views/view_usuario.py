@@ -3,13 +3,12 @@ from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from backend_mercos.models.usuario import Usuario
 from rest_framework import viewsets
-from .models.usuario import Usuario
-from .renderers.renderer_usuario import UsuarioJSONRenderer
-from .serializers.serializer_usuario import UsuarioSerializer, UsuarioListSerializer
+from backend_mercos.renderers.render_usuario import UsuarioJSONRenderer
+from backend_mercos.serializers.serialize_usuario import UsuarioSerializer, UsuarioListSerializer
 
 '''
-
 class UsuarioListApiView(ListAPIView):
     model = Usuario
     queryset = Usuario.objects.all()
@@ -27,6 +26,7 @@ class UsuarioRetrieveApiView(RetrieveAPIView):
       serializer = self.serializer_class(usuario)
       return Response(serializer.data, status = status.HTTP_200_OK)
 '''
+
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
-    serializer_class = UsuarioListSerializer
+    serializer_class = UsuarioSerializer
