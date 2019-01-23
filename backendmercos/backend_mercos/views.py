@@ -1,10 +1,10 @@
 from backend_mercos.models.usuario import Usuario
 from backend_mercos.models.pedido import Pedido as PedidoModel
-from backend_mercos.models.produto import Produto
-from backend_mercos.models.cliente import Cliente
-from backend_mercos.models.item_pedido import ItemPedido
+from backend_mercos.models.produto import Produto as ProdutoModel
+from backend_mercos.models.cliente import Cliente as ClienteModel
+from backend_mercos.models.item_pedido import ItemPedido as ItemPedidoModel
 from .renderers import UsuarioJSONRenderer, ItemPedidoJSONRenderer, ClienteJSONRenderer, PedidoJSONRenderer, ProdutoJSONRenderer
-from .serializers import UsuarioListSerializer, UsuarioSerializer, UsuarioSerializerCadastro, PedidoListSerializer, PedidoDetail
+from .serializers import UsuarioListSerializer, UsuarioSerializer, UsuarioSerializerCadastro, PedidoListSerializer, PedidoDetail, ClienteSerializer, ProdutoSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -63,6 +63,75 @@ class UsuarioDetail(APIView):
         Usuario = self.get_object(pk)
         Usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+'''
+####
+Produto
+####
+'''
+class Produto(APIView):
+    """
+    GET: Retorna todos os produtos
+    """
+    def get(self, request, format=None):
+        produtos = ProdutoModel.objects.all()
+        serializer = ProdutoSerializer(produtos, many=True)
+        return Response(serializer.data)
+
+class ProdutoById(APIView):
+    """
+    GET: Retorna o produto com o id
+    """
+    def get_object(self, pk):
+        try:
+            return ProdutoModel.objects.get(pk=pk)
+        except ProdutoModel.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        produto = self.get_object(pk)
+        serializer = ProdutoSerializer(produto)
+        return Response(serializer.data)
+
+'''
+####
+Cliente
+####
+'''
+class Cliente(APIView):
+    """
+    GET: Retorna todos os clientes
+    """
+    def get(self, request, format=None):
+        clientes = ClienteModel.objects.all()
+        serializer = ClienteSerializer(clientes, many=True)
+        return Response(serializer.data)
+
+class ClienteById(APIView):
+    """
+    GET: Retorna o cliente com o id
+    """
+    def get_object(self, pk):
+        try:
+            return ClienteModel.objects.get(pk=pk)
+        except ClienteModel.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        cliente = self.get_object(pk)
+        serializer = ClienteSerializer(cliente)
+        return Response(serializer.data)
+
+
+'''
+####
+ItemPedido
+####
+'''
+
+
+
+
+
 '''
 ####
 Pedido
