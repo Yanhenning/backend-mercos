@@ -23,7 +23,7 @@ class UsuarioTests(APITestCase):
                                senha='111111')
         Usuario.objects.create(nome='Silva Joao', email='sjoao@example.com',
                                senha='222222')
-    def test_puppy(self):
+    def test_dadoNenhumUsuario_criarUsuario_usuarioCriado(self):
         usuario1 = Usuario.objects.get(nome='Joao Silva')
         usuario2 = Usuario.objects.get(nome='Silva Joao')
 
