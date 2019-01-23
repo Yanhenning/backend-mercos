@@ -7,7 +7,7 @@ from ..serializers import UsuarioListSerializer, UsuarioSerializer
 
 
 class UsuarioTestsEmpty(APITestCase):
-    
+
     def test_dadoNenhumUsuarioCadastrado_entaoListaVazia(self):
         """
         Retornar lista vazia de funcionarios
@@ -18,6 +18,11 @@ class UsuarioTestsEmpty(APITestCase):
         #response = self.client.get('api/usuario/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,[])
+
+    def test_dadoUsuarioNaoCadastrado_quandoBuscarPorId_entaoNaoEncontrado(self):
+        url = reverse('usuario_by_id', kwargs={"pk":2})
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class UsuarioTests(APITestCase):
 
@@ -42,16 +47,26 @@ class UsuarioTests(APITestCase):
         response = self.client.get(url, format='json')
         #response = self.client.get('api/usuario/')
         serializer = UsuarioListSerializer(Usuario.objects.all(),many=True)
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
 
-'''
     def test_dadoBuscarUsuarioPorId_usuarioEncontrado(self):
-        url = reverse('usuario_by_id', kwargs ={'pk':4})
-        response = self.client.get(url)
+        url = reverse('usuario_by_id', kwargs ={'pk':1})
+
+        response = self.client.get(url, format='json')
+
         serializer = UsuarioSerializer(Usuario.objects.get(id=1))
-        
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
-'''
+
+    def test_dadoNenhumUsuario_quandoCadastrarUsuario_entaoCadastroCorreto(self):
+
+        url = reverse('usuario')
+        data = {"nome": "Yan Henning",
+                "email": "yanhenning@gmail.com",
+                "senha": "secreta"}
+        response = self.client.post(url, data,format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Usuario.objects.get(nome="Yan Henning").nome, "Yan Henning")
