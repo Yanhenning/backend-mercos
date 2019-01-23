@@ -11,6 +11,6 @@ urlpatterns = [
     path('produto/<int:pk>', views.ProdutoById.as_view(), name='produto_id'),
     path('cliente/', views.Cliente.as_view(), name='cliente'),
     path('cliente/<int:pk>', views.ClienteById.as_view(), name='cliente_id'),
+    path('itempedido/<int:pk>',
+    views.ItemPedidoById.as_view(), name='item_pedido_id')
 ]
-
-#urlpatterns = format_suffix_patterns(urlpatterns)

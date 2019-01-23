@@ -72,8 +72,19 @@ ItemPedido
 ####
 '''
 
+class ItemPedidoDetail(serializers.ModelSerializer):
+    produto = serializers.CharField(max_length=100, required=True)
+    preco = serializers.CharField(max_length=100, required=True)
+    precoCliente = serializers.CharField(max_length=100, required=True)
+    quantidadeProduto = serializers.CharField(max_length=30, required=True)
+    receita = serializers.CharField(max_length=30, required=True)
+    lucro = serializers.CharField(max_length=30, required=True)
+    rentabilidade = serializers.CharField(max_length=40, required=True)
 
-
+    class Meta:
+        model = ItemPedido
+        fields = ('id', 'produto', 'preco', 'precoCliente' ,'quantidadeProduto',
+        'receita','lucro', 'rentabilidade')
 
 '''
 ####

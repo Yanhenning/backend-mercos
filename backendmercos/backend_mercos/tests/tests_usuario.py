@@ -62,7 +62,6 @@ class UsuarioTests(APITestCase):
         self.assertEqual(response.data,serializer.data)
 
     def test_dadoNenhumUsuario_quandoCadastrarUsuario_entaoCadastroCorreto(self):
-
         url = reverse('usuario')
         data = {"nome": "Yan Henning",
                 "email": "yanhenning@gmail.com",

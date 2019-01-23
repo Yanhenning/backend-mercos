@@ -4,7 +4,7 @@ from backend_mercos.models.produto import Produto as ProdutoModel
 from backend_mercos.models.cliente import Cliente as ClienteModel
 from backend_mercos.models.item_pedido import ItemPedido as ItemPedidoModel
 from .renderers import UsuarioJSONRenderer, ItemPedidoJSONRenderer, ClienteJSONRenderer, PedidoJSONRenderer, ProdutoJSONRenderer
-from .serializers import UsuarioListSerializer, UsuarioSerializer, UsuarioSerializerCadastro, PedidoListSerializer, PedidoDetail, ClienteSerializer, ProdutoSerializer
+from .serializers import UsuarioListSerializer, UsuarioSerializer, UsuarioSerializerCadastro, PedidoListSerializer, PedidoDetail, ClienteSerializer, ProdutoSerializer, ItemPedidoDetail
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -71,11 +71,18 @@ Produto
 class Produto(APIView):
     """
     GET: Retorna todos os produtos
+    POST: Criar um novo produto
     """
     def get(self, request, format=None):
         produtos = ProdutoModel.objects.all()
         serializer = ProdutoSerializer(produtos, many=True)
         return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = ProdutoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProdutoById(APIView):
     """
@@ -106,6 +113,13 @@ class Cliente(APIView):
         serializer = ClienteSerializer(clientes, many=True)
         return Response(serializer.data)
 
+    def post(self, request, format=None):
+        serializer = ClienteSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class ClienteById(APIView):
     """
     GET: Retorna o cliente com o id
@@ -127,9 +141,26 @@ class ClienteById(APIView):
 ItemPedido
 ####
 '''
+class ItemPedido(APIView):
+    '''
+    GET: Retorna todos os ItemPedido do pedido com o respectivo id
+    POST: Criar o ItemPedido no pedido com o respectivo id
+    '''
 
+class ItemPedidoById(APIView):
+    '''
+    GET: Retorna o ItemPedido do respectivo id
+    '''
+    def get_object(self, pk):
+        try:
+            return ItemPedidoModel.objects.get(pk=pk)
+        except ItemPedidoModel.DoesNotExist:
+            raise Http404
 
-
+    def get(self, request, pk,format=None):
+        itemPedido = self.get_object(pk)
+        serializer = ItemPedidoDetail(itemPedido)
+        return Response(serializer.data)
 
 
 '''
@@ -139,7 +170,7 @@ Pedido
 '''
 class Pedido(APIView):
     '''
-    GET: Retonar todos os pedidos criados
+    GET: Retona todos os pedidos criados
     POST: Criar um Pedido
     '''
 
