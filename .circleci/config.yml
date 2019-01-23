@@ -42,4 +42,3 @@ jobs:
       - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
           path: test-results
           destination: tr1
-      - run: codecov --token=<"074b8579-8d1b-4f11-b2f6-ff9d2b0f74c8">
