@@ -3,20 +3,23 @@ from django.urls import reverse,include, path
 from rest_framework import status
 from rest_framework.test import APITestCase, URLPatternsTestCase
 from ..models.usuario import Usuario
+from ..serializers import UsuarioListSerializer
 
 
-class UsuarioTests(APITestCase):
+class UsuarioTestsEmpty(APITestCase):
     
-    def test_dadoUsuariosCadastrados_usuariosEncontrados(self):
+    def test_dadoNenhumUsuarioCadastrado_entaoListaVazia(self):
         """
-        Garantir que o usuário foi criado
+        Retornar lista vazia de funcionarios
         """
 
         url = reverse('usuario')
         response = self.client.get(url, format='json')
         #response = self.client.get('api/usuario/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        #self.assertEqual(response.data,'[]')
+        self.assertEqual(response.data,[])
+
+class UsuarioTests(APITestCase):
 
     def setUp(self):
         Usuario.objects.create(nome='Joao Silva', email='jsilva@example.com',
@@ -33,3 +36,13 @@ class UsuarioTests(APITestCase):
         self.assertEqual(usuario2.email,'sjoao@example.com')
         self.assertEqual(usuario1.senha,'111111')
         self.assertEqual(usuario2.senha,'222222')
+
+    def test_dadoUsuariosCadastrados_usuariosEncontrados(self):
+        url = reverse('usuario')
+        response = self.client.get(url, format='json')
+        #response = self.client.get('api/usuario/')
+        serializer = UsuarioListSerializer(Usuario.objects.all(),many=True)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data,serializer.data)
+        
