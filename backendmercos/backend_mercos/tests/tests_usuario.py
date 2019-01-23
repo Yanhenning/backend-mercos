@@ -45,4 +45,11 @@ class UsuarioTests(APITestCase):
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
+
+    def test_dadoBuscarUsuarioPorId_usuarioEncontrado(self):
+        url = reverse('usuario_by_id')
+        response = self.cliente.get('/api/usuario/1', format='json')
+        serializer = UsuarioSerializer(Usuario.objects.get(id=1))
         
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data,serializer.data)
