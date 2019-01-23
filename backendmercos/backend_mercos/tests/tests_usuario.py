@@ -3,7 +3,7 @@ from django.urls import reverse,include, path
 from rest_framework import status
 from rest_framework.test import APITestCase, URLPatternsTestCase
 from ..models.usuario import Usuario
-from ..serializers import UsuarioListSerializer
+from ..serializers import UsuarioListSerializer, UsuarioSerializer
 
 
 class UsuarioTestsEmpty(APITestCase):
@@ -22,9 +22,9 @@ class UsuarioTestsEmpty(APITestCase):
 class UsuarioTests(APITestCase):
 
     def setUp(self):
-        Usuario.objects.create(nome='Joao Silva', email='jsilva@example.com',
+        Usuario.objects.create(id = 1,nome='Joao Silva', email='jsilva@example.com',
                                senha='111111')
-        Usuario.objects.create(nome='Silva Joao', email='sjoao@example.com',
+        Usuario.objects.create(id = 2,nome='Silva Joao', email='sjoao@example.com',
                                senha='222222')
     def test_dadoNenhumUsuario_criarUsuario_usuarioCriado(self):
         usuario1 = Usuario.objects.get(nome='Joao Silva')
@@ -46,10 +46,12 @@ class UsuarioTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
 
+'''
     def test_dadoBuscarUsuarioPorId_usuarioEncontrado(self):
-        url = reverse('usuario_by_id')
-        response = self.cliente.get('/api/usuario/1', format='json')
+        url = reverse('usuario_by_id', kwargs ={'pk':4})
+        response = self.client.get(url)
         serializer = UsuarioSerializer(Usuario.objects.get(id=1))
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
+'''
