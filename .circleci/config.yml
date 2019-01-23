@@ -25,6 +25,7 @@ jobs:
             cd backendmercos
             ls
             pip install -r requirements.txt
+            pipenv install -r requirements.txt
       - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
@@ -34,6 +35,7 @@ jobs:
       - run:
           command: |
             cd backendmercos
+            pip
             pipenv run "python manage.py test"
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results
