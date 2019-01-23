@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:  # required for runs that don't use workflows
-    working_directory: ~/backend-mercos/backendmercos
+    working_directory: ~/backend-mercos/backendmercos/
     docker: # run the steps with Docker
       # CircleCI Python images available at: https://hub.docker.com/r/circleci/python/
       - image: circleci/python:3.6.4
