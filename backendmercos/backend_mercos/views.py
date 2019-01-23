@@ -1,4 +1,4 @@
-from backend_mercos.models.usuario import Usuario
+from backend_mercos.models.usuario import Usuario as UsuarioModel
 from backend_mercos.models.pedido import Pedido as PedidoModel
 from backend_mercos.models.produto import Produto as ProdutoModel
 from backend_mercos.models.cliente import Cliente as ClienteModel
@@ -16,14 +16,14 @@ Usuario
 ####
 '''
 
-class UsuarioGetAll(APIView):
+class Usuario(APIView):
     """
     GET: Retorna a lista de todos os usuários cadastrados no sistema
     POST: Cria um usuário novo
     """
 
     def get(self, request, format=None):
-        usuarios = Usuario.objects.all()
+        usuarios = UsuarioModel.objects.all()
         serializer = UsuarioListSerializer(usuarios,many=True)
         return Response(serializer.data)
 
@@ -42,26 +42,26 @@ class UsuarioDetail(APIView):
     """
     def get_object(self, pk):
         try:
-            return Usuario.objects.get(pk=pk)
-        except Usuario.DoesNotExist:
+            return UsuarioModel.objects.get(pk=pk)
+        except UsuarioModel.DoesNotExist:
             raise Http404
 
     def get(self, request, pk, format=None):
-        Usuario = self.get_object(pk)
-        serializer = UsuarioSerializer(Usuario)
+        usuario = self.get_object(pk)
+        serializer = UsuarioSerializer(usuario)
         return Response(serializer.data)
 
     def put(self, request, pk, format=None):
-        Usuario = self.get_object(pk)
-        serializer = UsuarioSerializer(Usuario, data=request.data)
+        usuario = self.get_object(pk)
+        serializer = UsuarioSerializer(usuario, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        Usuario = self.get_object(pk)
-        Usuario.delete()
+        usuario = self.get_object(pk)
+        usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 '''
 ####
