@@ -16,14 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from .routers import router
-
-
 
 app_name = "Pedidos Mercos"
 
 urlpatterns = [
  path('admin/', admin.site.urls),
- path('api/', include(router.urls))
+ path('api/', include('backend_mercos.urls'))
 ]

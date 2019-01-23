@@ -9,7 +9,7 @@ class Pedido(models.Model):
     valor = models.BigIntegerField(default=0)
     rentabilidade = models.CharField(max_length=50,
     choices = [(tag, tag.value) for tag in TipoRentabilidade])
-    
+
     def getRentabilidade(self):
         return self.rentabilidade
 
