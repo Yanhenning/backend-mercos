@@ -79,7 +79,7 @@ class ItemPedidoDetail(serializers.ModelSerializer):
     quantidadeProduto = serializers.CharField(max_length=30, required=True)
     receita = serializers.CharField(max_length=30, required=True)
     lucro = serializers.CharField(max_length=30, required=True)
-    rentabilidade = serializers.CharField(max_length=40, required=True)
+    rentabilidade = serializers.CharField(source='get_rentabilidade_display')
 
     class Meta:
         model = ItemPedido
@@ -96,7 +96,7 @@ class PedidoListSerializer(serializers.ModelSerializer):
     usuario = serializers.CharField(max_length=200, required = True)
     quantidadeItem = serializers.CharField(max_length=50, required=True)
     valor = serializers.CharField(max_length=200, required=True)
-    rentabilidade = serializers.CharField(max_length=100, required=True)
+    rentabilidade = serializers.CharField(source='get_rentabilidade_display')
 
     class Meta:
         model = PedidoModel
@@ -107,7 +107,7 @@ class PedidoDetail(serializers.ModelSerializer):
     cliente = serializers.CharField(max_length=200, required = True)
     quantidadeItem = serializers.CharField(max_length=50, required=True)
     valor = serializers.CharField(max_length=200, required=True)
-    rentabilidade = serializers.CharField(max_length=100, required=True)
+    rentabilidade = serializers.CharField(source='get_rentabilidade_display')
 
     class Meta:
         model = PedidoModel

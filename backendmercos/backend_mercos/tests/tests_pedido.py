@@ -8,6 +8,7 @@ from ..models.item_pedido import ItemPedido
 from ..models.produto import Produto
 from ..models.cliente import Cliente
 from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail
+from backend_mercos.enums_merc import TipoRentabilidade
 
 class PedidoTest(APITestCase):
 
@@ -40,16 +41,21 @@ class PedidoTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(len(response.data), 2)
-'''
+
     def test_dadoUsuario_quandoCriarPedido_entaoPedidoCriado(self):
         url = reverse('pedidos_cliente', kwargs={'id':1})
         data = {'cliente_id':2}
         response = self.client.post(url, data, format='json')
-        pedido = Pedido.objects.filter(cliente__id=2)
-        print(pedido)
+
+        usuario = Usuario.objects.get(id=1)
+
+        cliente = Cliente.objects.get(id=data['cliente_id'])
+
+        pedido = Pedido.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
+
         serializer = PedidoDetail(pedido)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data, serializer.data)
-        self.assertEqual(len(response.data), 1)
-'''
+        self.assertEqual(response.data['usuario'], serializer.data['usuario'])
+        self.assertEqual(response.data['cliente'], serializer.data['cliente'])
+        self.assertEqual(response.data['rentabilidade'], serializer.data['rentabilidade'])

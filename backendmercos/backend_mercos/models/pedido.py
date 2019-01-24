@@ -9,7 +9,7 @@ class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, default=None)
     quantidadeItem = models.BigIntegerField(default=0)
     valor = models.BigIntegerField(default=0)
-    rentabilidade = models.CharField(max_length=50,
+    rentabilidade = models.CharField(max_length=60,
     choices = [(tag, tag.value) for tag in TipoRentabilidade])
 
     def getRentabilidade(self):

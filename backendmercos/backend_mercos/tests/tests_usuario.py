@@ -57,7 +57,7 @@ class UsuarioTests(APITestCase):
         response = self.client.get(url, format='json')
 
         serializer = UsuarioSerializer(Usuario.objects.get(id=1))
-
+        
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
 
@@ -68,5 +68,4 @@ class UsuarioTests(APITestCase):
                 "senha": "secreta"}
         response = self.client.post(url, data,format='json')
         self.assertEqual(Usuario.objects.get(nome="Yan Henning").nome, "Yan Henning")
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

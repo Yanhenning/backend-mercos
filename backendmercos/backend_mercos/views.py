@@ -14,6 +14,7 @@ from .services import usuario_service as usuarioService
 from .services import produto_service as produtoService
 from .services import cliente_service as clienteService
 from .services import pedido_service as pedidoService
+from backend_mercos.enums_merc import TipoRentabilidade
 
 '''
 ####
@@ -190,7 +191,7 @@ class PedidoByIdUsuario(APIView):
         usuario = usuarioService.getById(id)
         cliente = clienteService.getById(id=cliente_id)
 
-        pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente)
+        pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
 
         try:
             pedido.save()
