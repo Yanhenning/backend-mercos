@@ -2,6 +2,7 @@ from ..models.item_pedido import ItemPedido as ItemPedidoModel
 from ..models.pedido import Pedido as PedidoModel
 from ..models.produto import Produto as ProdutoModel
 from backend_mercos.enums_merc import TipoRentabilidade
+from django.http import Http404
 
 def calcularRentabilidade(preco, precoCliente):
     if precoCliente > preco:
@@ -21,3 +22,9 @@ def permitirVendaMultiplo(quantidadeVendaMinima, quantidadeProduto):
             return True
         else:
             return False
+
+def getById(id):
+    try:
+        return ItemPedidoModel.objects.get(id=id)
+    except ItemPedidoModel.DoesNotExist:
+        raise Http404

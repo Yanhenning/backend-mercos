@@ -9,7 +9,11 @@ from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .services import item_pedido_service
+from .services import item_pedido_service as itemPedidoService
+from .services import usuario_service as usuarioService
+from .services import produto_service as produtoService
+from .services import cliente_service as clienteService
+from .services import produto_service as produtoService
 
 '''
 ####
@@ -41,27 +45,22 @@ class UsuarioById(APIView):
     PUT: cadastra o usuário
     DELETE: deleta o usuário pelo id
     """
-    def get_object(self, pk):
-        try:
-            return UsuarioModel.objects.get(pk=pk)
-        except UsuarioModel.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk, format=None):
-        usuario = self.get_object(pk)
+    def get(self, request, id, format=None):
+        usuario = usuarioService.getById(id)
         serializer = UsuarioSerializer(usuario)
         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        usuario = self.get_object(pk)
+    def put(self, request, id, format=None):
+        usuario = usuarioService.getById(id)
         serializer = UsuarioSerializer(usuario, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        usuario = self.get_object(pk)
+    def delete(self, request, id, format=None):
+        usuario = usuarioService.getById(id)
         usuario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 '''
@@ -78,6 +77,7 @@ class Produto(APIView):
         produtos = ProdutoModel.objects.all()
         serializer = ProdutoSerializer(produtos, many=True)
         return Response(serializer.data)
+        
     def post(self, request, format=None):
         serializer = ProdutoSerializer(data=request.data)
         if serializer.is_valid():
@@ -89,14 +89,14 @@ class ProdutoById(APIView):
     """
     GET: Retorna o produto com o id
     """
-    def get_object(self, pk):
+    def get_object(self, id):
         try:
-            return ProdutoModel.objects.get(pk=pk)
+            return ProdutoModel.objects.get(id=id)
         except ProdutoModel.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        produto = self.get_object(pk)
+    def get(self, request, id, format=None):
+        produto = self.get_object(id)
         serializer = ProdutoSerializer(produto)
         return Response(serializer.data)
 
@@ -125,14 +125,14 @@ class ClienteById(APIView):
     """
     GET: Retorna o cliente com o id
     """
-    def get_object(self, pk):
+    def get_object(self, id):
         try:
-            return ClienteModel.objects.get(pk=pk)
+            return ClienteModel.objects.get(id=id)
         except ClienteModel.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        cliente = self.get_object(pk)
+    def get(self, request, id, format=None):
+        cliente = self.get_object(id)
         serializer = ClienteSerializer(cliente)
         return Response(serializer.data)
 
@@ -152,14 +152,10 @@ class ItemPedidoById(APIView):
     '''
     GET: Retorna o ItemPedido do respectivo id
     '''
-    def get_object(self, pk):
-        try:
-            return ItemPedidoModel.objects.get(pk=pk)
-        except ItemPedidoModel.DoesNotExist:
-            raise Http404
 
-    def get(self, request, pk,format=None):
-        itemPedido = self.get_object(pk)
+
+    def get(self, request, id,format=None):
+        itemPedido = itemPedidoService.getById(id)
         serializer = ItemPedidoDetail(itemPedido)
         return Response(serializer.data)
 
@@ -184,14 +180,14 @@ class PedidoById(APIView):
     PUT: Edita o pedido pelo id
     DELETE: delete o pedido do id
     '''
-    def get_object(self, pk):
+    def get_object(self, id):
         try:
-            return PedidoModel.objects.get(id=pk)
+            return PedidoModel.objects.get(id=id)
         except PedidoModel.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        pedido = self.get_object(pk)
+    def get(self, request, id, format=None):
+        pedido = self.get_object(id)
         serializer = PedidoDetail(pedido)
         return Response(serializer.data)
 
@@ -199,23 +195,23 @@ class PedidoByIdUsuario(APIView):
     '''
     GET: Retorna todos os pedidos do usuario com respectivo id
     '''
-    def get_object(self, pk):
+    def get_object(self, id):
         try:
-            return PedidoModel.objects.filter(usuario__id=pk)
+            return PedidoModel.objects.filter(usuario__id=id)
         except PedidoModel.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk, format=None):
-        pedido = self.get_object(pk)
+    def get(self, request, id, format=None):
+        pedido = self.get_object(id)
         serializer = PedidoDetail(pedido, many=True)
         return Response(serializer.data)
 
-    def post(self, request, pk, format=None):
+    def post(self, request, id, format=None):
 
         cliente_id = request.data['cliente_id']
 
         try:
-            usuario = UsuarioModel.objects.get(id=pk)
+            usuario = UsuarioModel.objects.get(id=id)
         except UsuarioModel.DoesNotExist:
             raise Http404
 

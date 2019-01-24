@@ -23,7 +23,7 @@ class PedidoTest(APITestCase):
         usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@@example.com",senha="222222")
 
     def test_dadoPedidos_quandoBuscarPedidosUsuario_entaoPedidosEncontrados(self):
-        url = reverse('pedidos_cliente', kwargs={'pk':1})
+        url = reverse('pedidos_cliente', kwargs={'id':1})
         usuario = Usuario.objects.get(id=1)
         usuario2 = Usuario.objects.get(id=2)
         cliente = Cliente.objects.get(id=1)
@@ -42,7 +42,7 @@ class PedidoTest(APITestCase):
         self.assertEqual(len(response.data), 2)
 '''
     def test_dadoUsuario_quandoCriarPedido_entaoPedidoCriado(self):
-        url = reverse('pedidos_cliente', kwargs={'pk':1})
+        url = reverse('pedidos_cliente', kwargs={'id':1})
         data = {'cliente_id':2}
         response = self.client.post(url, data, format='json')
         pedido = Pedido.objects.filter(cliente__id=2)

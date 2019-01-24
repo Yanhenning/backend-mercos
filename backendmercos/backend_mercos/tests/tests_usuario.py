@@ -20,7 +20,7 @@ class UsuarioTestsEmpty(APITestCase):
         self.assertEqual(response.data,[])
 
     def test_dadoUsuarioNaoCadastrado_quandoBuscarPorId_entaoNaoEncontrado(self):
-        url = reverse('usuario_by_id', kwargs={"pk":2})
+        url = reverse('usuario_by_id', kwargs={"id":2})
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -52,7 +52,7 @@ class UsuarioTests(APITestCase):
         self.assertEqual(response.data,serializer.data)
 
     def test_dadoBuscarUsuarioPorId_usuarioEncontrado(self):
-        url = reverse('usuario_by_id', kwargs ={'pk':1})
+        url = reverse('usuario_by_id', kwargs ={'id':1})
 
         response = self.client.get(url, format='json')
 

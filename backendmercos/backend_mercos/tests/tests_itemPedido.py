@@ -11,6 +11,7 @@ from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail
 from ..services.item_pedido_service import calcularRentabilidade, permitirVendaMultiplo
 from backend_mercos.enums_merc import TipoRentabilidade
 from ..services import item_pedido_service as itemPedidoService
+
 class ItemPedidoTest(APITestCase):
 
     def setUp(self):

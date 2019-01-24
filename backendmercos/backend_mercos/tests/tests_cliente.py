@@ -11,7 +11,7 @@ class ClienteTest(APITestCase):
         Cliente.objects.create(id=2, nome="R2-D2")
 
     def test_dadoCliente_quandoBuscarId_entaoEncontrado(self):
-        url = reverse('cliente_by_id', kwargs={'pk':1})
+        url = reverse('cliente_by_id', kwargs={'id':1})
 
         serializer = ClienteSerializer(Cliente.objects.get(id=1))
         response = self.client.get(url)
@@ -19,7 +19,7 @@ class ClienteTest(APITestCase):
         self.assertEqual(response.data,serializer.data)
 
     def test_dadoCliente_quandoBuscarId_entaoNaoEncontrado(self):
-        url = reverse('cliente_by_id', kwargs={'pk':99})
+        url = reverse('cliente_by_id', kwargs={'id':99})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
