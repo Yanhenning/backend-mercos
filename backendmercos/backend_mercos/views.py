@@ -34,7 +34,7 @@ class Usuario(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UsuarioDetail(APIView):
+class UsuarioById(APIView):
     """
     GET: retorna o usuário por id
     PUT: cadastra o usuário

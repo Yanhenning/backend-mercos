@@ -4,7 +4,7 @@ from backend_mercos import views
 
 urlpatterns = [
     path('usuario/', views.Usuario.as_view(),name='usuario'),
-    path('usuario/<int:pk>/', views.UsuarioDetail.as_view(),name='usuario_by_id'),
+    path('usuario/<int:pk>/', views.UsuarioById.as_view(),name='usuario_by_id'),
     path('pedido/', views.Pedido.as_view(), name='pedido'),
     path('pedido/<int:pk>/', views.PedidoById.as_view(),name='pedido_by_id'),
     path('produto/', views.Produto.as_view(), name='produto'),

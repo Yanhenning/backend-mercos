@@ -8,6 +8,8 @@ from ..models.item_pedido import ItemPedido
 from ..models.produto import Produto
 from ..models.cliente import Cliente
 from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail
+from ..services.item_pedido_service import calcularRentabilidade, permitirVendaMultiplo
+from backend_mercos.enums_merc import TipoRentabilidade
 
 class ItemPedidoTest(APITestCase):
 
@@ -26,4 +28,47 @@ class ItemPedidoTest(APITestCase):
 
     def test_dadoProduto_quandoCriarItem_itemCriado(self):
         pedido = Pedido.objects.get(id=1)
-        
+
+class ItemPedidoService(APITestCase):
+
+    def test_dadoItemPedido_quandoCalcularRentabilidade_rentabilidadeOtima(self):
+        preco = 100
+        preco_cliente = 100.1
+        rentabilidade = calcularRentabilidade(preco, preco_cliente)
+        self.assertEqual(TipoRentabilidade.RO, rentabilidade)
+
+    def test_precocliente10Abaixo_quandoCalcularRentabilidade_rentabilidadeBoa(self):
+        preco = 100
+        preco_cliente = 90
+        rentabilidade = calcularRentabilidade(preco, preco_cliente)
+        self.assertEqual(TipoRentabilidade.RB, rentabilidade)
+
+    def test_precoclienteIgualPrecoProduto_quandoCalcularRentabilidade_rentabilidadeBoa(self):
+        preco = 100
+        preco_cliente = 100
+        rentabilidade = calcularRentabilidade(preco, preco_cliente)
+        self.assertEqual(TipoRentabilidade.RB, rentabilidade)
+
+    def test_precoclienteMenor10PerctPrecoProduto_quandoCalcularRentabilidade_rentabilidadeBoa(self):
+        preco = 100
+        preco_cliente = 89.9
+        rentabilidade = calcularRentabilidade(preco, preco_cliente)
+        self.assertEqual(TipoRentabilidade.RR, rentabilidade)
+
+    def test_dadoProdutoSemCompraMinima_quandoQualquerQuantidade_entaoProdutoCompravel(self):
+        compra_minima = 0
+        quantidade_cliente = 2
+        permitir_compra = permitirVendaMultiplo(compra_minima, quantidade_cliente)
+        self.assertEqual(permitir_compra, True)
+
+    def test_dadoProdutoCompraMinima_quandoQuantidadeMultiplo_entaoProdutoCompravel(self):
+        compra_minima = 5
+        quantidade_cliente = 15
+        permitir_compra = permitirVendaMultiplo(compra_minima, quantidade_cliente)
+        self.assertEqual(permitir_compra, True)
+
+    def test_dadoProdutoCompraMinima_quandoQuantidadeErrada_entaoProdutoCompravel(self):
+        compra_minima = 2
+        quantidade_cliente = 3
+        permitir_compra = permitirVendaMultiplo(compra_minima, quantidade_cliente)
+        self.assertEqual(permitir_compra, False)
