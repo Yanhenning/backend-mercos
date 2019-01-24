@@ -9,6 +9,7 @@ from ..models.produto import Produto
 from ..models.cliente import Cliente
 from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail
 from backend_mercos.enums_merc import TipoRentabilidade
+from ..services import pedido_service as pedidoService
 
 class PedidoTest(APITestCase):
 
@@ -54,8 +55,36 @@ class PedidoTest(APITestCase):
         pedido = Pedido.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
 
         serializer = PedidoDetail(pedido)
-        print(serializer.data)
+        
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['usuario'], serializer.data['usuario'])
         self.assertEqual(response.data['cliente'], serializer.data['cliente'])
         self.assertEqual(response.data['rentabilidade'], serializer.data['rentabilidade'])
+
+class PedidoServiceTest(APITestCase):
+
+    def setUp(self):
+        Produto.objects.create(id=1, nome="Millenium​ ​Falcon", compra_minima=0, preco=550000)
+        Produto.objects.create(id=2, nome="X-Wing", compra_minima=2, preco=60000)
+        Produto.objects.create(id=5, nome="Lightsaber", compra_minima=5, preco=6000)
+
+        cliente1 = Cliente.objects.create(id=1, nome="Darth Vader")
+        cliente2 = Cliente.objects.create(id=2, nome="Obi-Wan Kenobi")
+
+        usuario1 = Usuario.objects.create(id=1, nome="Yan Henning", email="yanhenning@gmail.com",senha="111111")
+        usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@@example.com",senha="222222")
+
+    def test_dadoPedidoService_quandoBuscarPedidosUsuario_entaoPedidosEncontrados(self):
+
+        usuario = Usuario.objects.get(id=1)
+        usuario2 = Usuario.objects.get(id=2)
+        cliente = Cliente.objects.get(id=1)
+        pedidos = []
+
+        pedidos.append(Pedido.objects.create(id=1,usuario=usuario, cliente=cliente))
+        Pedido.objects.create(id=2,usuario=usuario2, cliente=cliente)
+        pedidos.append(Pedido.objects.create(id=3,usuario=usuario, cliente=cliente))
+
+        pedidosResult = pedidoService.getAllByUsuarioId(1)
+
+        self.assertEqual(list(pedidosResult), pedidos)
