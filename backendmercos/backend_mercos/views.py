@@ -162,7 +162,6 @@ class ItemPedidoById(APIView):
         serializer = ItemPedidoDetail(itemPedido)
         return Response(serializer.data)
 
-
 '''
 ####
 Pedido
@@ -171,7 +170,6 @@ Pedido
 class Pedido(APIView):
     '''
     GET: Retona todos os pedidos criados
-    POST: Criar um Pedido
     '''
 
     def get(self, request, format=None):
@@ -187,7 +185,7 @@ class PedidoById(APIView):
     '''
     def get_object(self, pk):
         try:
-            return PedidoModel.objects.get(pk=pk)
+            return PedidoModel.objects.get(id=pk)
         except PedidoModel.DoesNotExist:
             raise Http404
 
@@ -195,3 +193,40 @@ class PedidoById(APIView):
         pedido = self.get_object(pk)
         serializer = PedidoDetail(pedido)
         return Response(serializer.data)
+
+class PedidoByIdUsuario(APIView):
+    '''
+    GET: Retorna todos os pedidos do usuario com respectivo id
+    '''
+    def get_object(self, pk):
+        try:
+            return PedidoModel.objects.filter(usuario__id=pk)
+        except PedidoModel.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        pedido = self.get_object(pk)
+        serializer = PedidoDetail(pedido, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, pk, format=None):
+
+        cliente_id = request.data['cliente_id']
+
+        try:
+            usuario = UsuarioModel.objects.get(id=pk)
+        except UsuarioModel.DoesNotExist:
+            raise Http404
+
+        try:
+            cliente = ClienteModel.objects.get(id=cliente_id)
+        except UsuarioModel.DoesNotExist:
+            raise Http404
+
+        pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente)
+
+        try:
+            pedido.save()
+            return Response(PedidoDetail(pedido).data, status=status.HTTP_201_CREATED)
+        except PedidoModel.DoesNotExist:
+            raise Http404

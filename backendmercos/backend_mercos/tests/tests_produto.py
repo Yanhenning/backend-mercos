@@ -11,7 +11,7 @@ class ProdutoTest(APITestCase):
         Produto.objects.create(id=2, nome="Death Star Toy", compra_minima = 1, preco=4000)
 
     def test_dadoProduto_quandoBuscarId_entaoEncontrado(self):
-        url = reverse('produto_id', kwargs={'pk':1})
+        url = reverse('produto_by_id', kwargs={'pk':1})
 
         serializer = ProdutoSerializer(Produto.objects.get(id=1))
         response = self.client.get(url)
@@ -19,7 +19,7 @@ class ProdutoTest(APITestCase):
         self.assertEqual(response.data,serializer.data)
 
     def test_dadoProduto_quandoBuscarId_entaoNaoEncontrado(self):
-        url = reverse('produto_id', kwargs={'pk':99})
+        url = reverse('produto_by_id', kwargs={'pk':99})
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 

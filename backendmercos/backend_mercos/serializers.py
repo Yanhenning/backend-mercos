@@ -104,10 +104,11 @@ class PedidoListSerializer(serializers.ModelSerializer):
 
 class PedidoDetail(serializers.ModelSerializer):
     usuario = serializers.CharField(max_length=200, required = True)
+    cliente = serializers.CharField(max_length=200, required = True)
     quantidadeItem = serializers.CharField(max_length=50, required=True)
     valor = serializers.CharField(max_length=200, required=True)
     rentabilidade = serializers.CharField(max_length=100, required=True)
 
     class Meta:
         model = PedidoModel
-        fields = ('id', 'usuario', 'quantidadeItem', 'valor', 'rentabilidade')
+        fields = ('id', 'usuario','cliente', 'quantidadeItem', 'valor', 'rentabilidade')
