@@ -77,7 +77,6 @@ class ItemPedidoDetail(serializers.ModelSerializer):
     preco = serializers.CharField(max_length=100, required=True)
     precoCliente = serializers.CharField(max_length=100, required=True)
     quantidadeProduto = serializers.CharField(max_length=30, required=True)
-    receita = serializers.CharField(max_length=30, required=True)
     lucro = serializers.CharField(max_length=30, required=True)
     rentabilidade = serializers.CharField(source='get_rentabilidade_display')
 

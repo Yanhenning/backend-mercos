@@ -10,7 +10,6 @@ class ItemPedido(models.Model):
     preco = models.BigIntegerField(default=0)
     precoCliente = models.BigIntegerField()
     quantidadeProduto = models.BigIntegerField(default=0)
-    receita = models.BigIntegerField()
     lucro = models.BigIntegerField()
     rentabilidade = models.CharField(max_length=50,
      choices = [(tag, tag.value) for tag in TipoRentabilidade])

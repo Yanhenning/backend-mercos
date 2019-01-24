@@ -54,7 +54,7 @@ class PedidoTest(APITestCase):
         pedido = Pedido.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
 
         serializer = PedidoDetail(pedido)
-
+        print(serializer.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['usuario'], serializer.data['usuario'])
         self.assertEqual(response.data['cliente'], serializer.data['cliente'])
