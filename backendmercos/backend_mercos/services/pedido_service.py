@@ -7,3 +7,13 @@ def getById(id):
                 return PedidoModel.objects.get(id=id)
             except PedidoModel.DoesNotExist:
                 raise Http404
+
+def getAll():
+    return PedidoModel.objects.all()
+
+
+def getAllByUsuarioId(usuario_id):
+    try:
+        return PedidoModel.objects.filter(usuario__id=usuario_id)
+    except PedidoModel.DoesNotExist:
+        raise Http404

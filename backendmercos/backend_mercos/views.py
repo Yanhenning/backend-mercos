@@ -13,7 +13,7 @@ from .services import item_pedido_service as itemPedidoService
 from .services import usuario_service as usuarioService
 from .services import produto_service as produtoService
 from .services import cliente_service as clienteService
-from .services import produto_service as produtoService
+from .services import pedido_service as pedidoService
 
 '''
 ####
@@ -28,7 +28,7 @@ class Usuario(APIView):
     """
 
     def get(self, request, format=None):
-        usuarios = UsuarioModel.objects.all()
+        usuarios = usuarioService.getAll()
         serializer = UsuarioListSerializer(usuarios,many=True)
         return Response(serializer.data)
 
@@ -74,10 +74,10 @@ class Produto(APIView):
     POST: Criar um novo produto
     """
     def get(self, request, format=None):
-        produtos = ProdutoModel.objects.all()
+        produtos = produtoService.getAll()
         serializer = ProdutoSerializer(produtos, many=True)
         return Response(serializer.data)
-        
+
     def post(self, request, format=None):
         serializer = ProdutoSerializer(data=request.data)
         if serializer.is_valid():
@@ -89,14 +89,8 @@ class ProdutoById(APIView):
     """
     GET: Retorna o produto com o id
     """
-    def get_object(self, id):
-        try:
-            return ProdutoModel.objects.get(id=id)
-        except ProdutoModel.DoesNotExist:
-            raise Http404
-
     def get(self, request, id, format=None):
-        produto = self.get_object(id)
+        produto = produtoService.getById(id)
         serializer = ProdutoSerializer(produto)
         return Response(serializer.data)
 
@@ -110,7 +104,7 @@ class Cliente(APIView):
     GET: Retorna todos os clientes
     """
     def get(self, request, format=None):
-        clientes = ClienteModel.objects.all()
+        clientes = clienteService.getAll()
         serializer = ClienteSerializer(clientes, many=True)
         return Response(serializer.data)
 
@@ -125,17 +119,11 @@ class ClienteById(APIView):
     """
     GET: Retorna o cliente com o id
     """
-    def get_object(self, id):
-        try:
-            return ClienteModel.objects.get(id=id)
-        except ClienteModel.DoesNotExist:
-            raise Http404
 
     def get(self, request, id, format=None):
-        cliente = self.get_object(id)
+        cliente = clienteService.getById(id)
         serializer = ClienteSerializer(cliente)
         return Response(serializer.data)
-
 
 '''
 ####
@@ -152,7 +140,6 @@ class ItemPedidoById(APIView):
     '''
     GET: Retorna o ItemPedido do respectivo id
     '''
-
 
     def get(self, request, id,format=None):
         itemPedido = itemPedidoService.getById(id)
@@ -180,14 +167,9 @@ class PedidoById(APIView):
     PUT: Edita o pedido pelo id
     DELETE: delete o pedido do id
     '''
-    def get_object(self, id):
-        try:
-            return PedidoModel.objects.get(id=id)
-        except PedidoModel.DoesNotExist:
-            raise Http404
 
     def get(self, request, id, format=None):
-        pedido = self.get_object(id)
+        pedido = pedidoService.getById(id)
         serializer = PedidoDetail(pedido)
         return Response(serializer.data)
 
@@ -195,14 +177,9 @@ class PedidoByIdUsuario(APIView):
     '''
     GET: Retorna todos os pedidos do usuario com respectivo id
     '''
-    def get_object(self, id):
-        try:
-            return PedidoModel.objects.filter(usuario__id=id)
-        except PedidoModel.DoesNotExist:
-            raise Http404
 
     def get(self, request, id, format=None):
-        pedido = self.get_object(id)
+        pedido = pedidoService.getAllByUsuarioId(id)
         serializer = PedidoDetail(pedido, many=True)
         return Response(serializer.data)
 
@@ -210,15 +187,8 @@ class PedidoByIdUsuario(APIView):
 
         cliente_id = request.data['cliente_id']
 
-        try:
-            usuario = UsuarioModel.objects.get(id=id)
-        except UsuarioModel.DoesNotExist:
-            raise Http404
-
-        try:
-            cliente = ClienteModel.objects.get(id=cliente_id)
-        except UsuarioModel.DoesNotExist:
-            raise Http404
+        usuario = usuarioService.getById(id)
+        cliente = clienteService.getById(id=cliente_id)
 
         pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente)
 
