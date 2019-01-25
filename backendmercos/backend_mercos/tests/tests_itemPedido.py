@@ -7,7 +7,7 @@ from ..models.pedido import Pedido
 from ..models.item_pedido import ItemPedido
 from ..models.produto import Produto
 from ..models.cliente import Cliente
-from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail
+from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail, ItemPedidoDetail
 from ..services.item_pedido_service import calcularRentabilidade, permitirVendaMultiplo
 from backend_mercos.enums_merc import TipoRentabilidade
 from ..services import item_pedido_service as itemPedidoService
@@ -26,9 +26,111 @@ class ItemPedidoTest(APITestCase):
         usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@@example.com",senha="222222")
 
         Pedido.objects.create(id=1, usuario=usuario1, cliente=cliente1)
+        Pedido.objects.create(id=2,usuario=usuario2, cliente=cliente2)
 
-    def test_dadoProduto_quandoCriarItem_itemCriado(self):
-        pedido = Pedido.objects.get(id=1)
+    def test_dadoProduto_quandoAdicionarPedido_entaoItemPedidoCriadoRentabilidadeBoa(self):
+        url = reverse('item_pedido', kwargs={'id':1})
+
+        produto = Produto.objects.get(id=1)
+
+        data = {'nome_produto':produto.nome,
+                    'compra_minima':produto.compra_minima,
+                    'preco':produto.preco,
+                    'preco_cliente':550000,
+                    'quantidade_produto':1
+                    }
+
+        response = self.client.post(url, data, format='json')
+
+        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        #TODO fix the serializer from query
+        self.assertEqual(response.data['nomeProduto'], produto.nome)
+        self.assertEqual(response.data['preco'], str(produto.preco))
+        self.assertEqual(response.data['precoCliente'], '550000')
+        self.assertEqual(response.data['receita'], str(550000*1))
+        self.assertEqual(response.data['lucro'], '0')
+        self.assertEqual(response.data['rentabilidade'], TipoRentabilidade.RB.value)
+
+    def test_dadoProduto_quandoAdicionarPedido_entaoItemPedidoCriadoRentabilidadeOtima(self):
+        url = reverse('item_pedido', kwargs={'id':1})
+
+        produto = Produto.objects.get(id=1)
+
+        data = {'nome_produto':produto.nome,
+                    'compra_minima':produto.compra_minima,
+                    'preco':produto.preco,
+                    'preco_cliente':550001,
+                    'quantidade_produto':1
+                    }
+
+        response = self.client.post(url, data, format='json')
+
+        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        #TODO fix the serializer from query
+        self.assertEqual(response.data['nomeProduto'], produto.nome)
+        self.assertEqual(response.data['preco'], str(produto.preco))
+        self.assertEqual(response.data['precoCliente'], '550001')
+        self.assertEqual(response.data['receita'], str(550001))
+        self.assertEqual(response.data['lucro'], '1')
+        self.assertEqual(response.data['rentabilidade'], TipoRentabilidade.RO.value)
+
+    def test_dadoProduto_quandoAdicionarPedidoRentabilidadeRuim_entaoRetornaException(self):
+        url = reverse('item_pedido', kwargs={'id':1})
+
+        produto = Produto.objects.get(id=1)
+
+        data = {'nome_produto':produto.nome,
+                    'compra_minima':produto.compra_minima,
+                    'preco':produto.preco,
+                    'preco_cliente':30000,
+                    'quantidade_produto':1
+                    }
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_dadoProduto_quandoCompraMinimaSatisfeita_entaoItemPedidoCriado(self):
+        url = reverse('item_pedido', kwargs={'id':1})
+
+        produto = Produto.objects.get(id=2)
+
+        data = {'nome_produto':produto.nome,
+                    'compra_minima':produto.compra_minima,
+                    'preco':produto.preco,
+                    'preco_cliente':60000,
+                    'quantidade_produto':8
+                    }
+
+        response = self.client.post(url, data, format='json')
+
+        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        #TODO fix the serializer from query
+        self.assertEqual(response.data['nomeProduto'], produto.nome)
+        self.assertEqual(response.data['preco'], str(produto.preco))
+        self.assertEqual(response.data['precoCliente'], '60000')
+        self.assertEqual(response.data['receita'], str(60000*8))
+        self.assertEqual(response.data['lucro'], '0')
+        self.assertEqual(response.data['rentabilidade'], TipoRentabilidade.RB.value)
+
+
+
+    def test_dadoProduto_quandoCompraMinimaNaoSatisfeita_entaoItemPedidoNegado(self):
+        url = reverse('item_pedido', kwargs={'id':1})
+
+        produto = Produto.objects.get(id=2)
+
+        data = {'nome_produto':produto.nome,
+                    'compra_minima':produto.compra_minima,
+                    'preco':produto.preco,
+                    'preco_cliente':60000,
+                    'quantidade_produto':7
+                    }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 class ItemPedidoService(APITestCase):
 

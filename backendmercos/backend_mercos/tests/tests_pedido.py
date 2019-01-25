@@ -10,6 +10,7 @@ from ..models.cliente import Cliente
 from ..serializers import UsuarioListSerializer, UsuarioSerializer, PedidoDetail, PedidoListSerializer, PedidoDetail
 from backend_mercos.enums_merc import TipoRentabilidade
 from ..services import pedido_service as pedidoService
+from rest_framework.exceptions import ValidationError
 
 class PedidoTest(APITestCase):
 
@@ -22,7 +23,8 @@ class PedidoTest(APITestCase):
         cliente2 = Cliente.objects.create(id=2, nome="Obi-Wan Kenobi")
 
         usuario1 = Usuario.objects.create(id=1, nome="Yan Henning", email="yanhenning@gmail.com",senha="111111")
-        usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@@example.com",senha="222222")
+        usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@example.com",senha="222222")
+
 
     def test_dadoPedidos_quandoBuscarPedidosUsuario_entaoPedidosEncontrados(self):
         url = reverse('pedidos_cliente', kwargs={'id':1})
@@ -55,11 +57,18 @@ class PedidoTest(APITestCase):
         pedido = Pedido.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
 
         serializer = PedidoDetail(pedido)
-        
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['usuario'], serializer.data['usuario'])
         self.assertEqual(response.data['cliente'], serializer.data['cliente'])
         self.assertEqual(response.data['rentabilidade'], serializer.data['rentabilidade'])
+
+    def test_dadoUsuario_quandoCriarPedidoDadosInvalidos_entaoRetornaValidationError(self):
+        url = reverse('pedidos_cliente', kwargs={'id':1})
+        data = {'clienteid':2}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 class PedidoServiceTest(APITestCase):
 

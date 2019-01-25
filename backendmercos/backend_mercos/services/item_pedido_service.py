@@ -28,3 +28,9 @@ def getById(id):
         return ItemPedidoModel.objects.get(id=id)
     except ItemPedidoModel.DoesNotExist:
         raise Http404
+
+def getAllByPedidoId(pedido_id):
+    return ItemPedidoModel.objects.get(pedido__id=pedido_id)
+
+def calcularLucro(preco, precoCliente, quantidade):
+    return round((precoCliente - preco)*quantidade,2)

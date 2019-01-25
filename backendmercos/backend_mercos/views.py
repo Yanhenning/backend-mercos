@@ -15,6 +15,7 @@ from .services import produto_service as produtoService
 from .services import cliente_service as clienteService
 from .services import pedido_service as pedidoService
 from backend_mercos.enums_merc import TipoRentabilidade
+from rest_framework.exceptions import ValidationError
 
 '''
 ####
@@ -137,6 +138,38 @@ class ItemPedido(APIView):
     POST: Criar o ItemPedido no pedido com o respectivo id
     '''
 
+    def get(self, request, id, format=None):
+        itemsPedido = itemPedidoService.getAllByPedidoId(id)
+        serializer = ItemPedidoDetail(itemsPedido, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, id, format=None):
+
+        try:
+            data = request.data
+            nomeProduto = data['nome_produto']
+            preco = data['preco']
+            precoCliente = data['preco_cliente']
+            quantidade = data['quantidade_produto']
+            compraMinima = data['compra_minima']
+        except:
+            raise ValidationError("Dados inválidos")
+
+        if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
+            pedido = pedidoService.getById(id)
+            rentabilidade = itemPedidoService.calcularRentabilidade(preco, precoCliente)
+            if rentabilidade == TipoRentabilidade.RR:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                item = ItemPedidoModel.objects.create_item(pedido=pedido, nomeProduto=nomeProduto,
+                preco=preco,precoCliente=precoCliente,quantidadeProduto=quantidade,
+                rentabilidade=rentabilidade)
+                pedidoService.atualizerPedido(pedido, item)
+                serializer = ItemPedidoDetail(item)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            raise ValidationError({"A compra deve ser múltiplo de": compraMinima})
+
 class ItemPedidoById(APIView):
     '''
     GET: Retorna o ItemPedido do respectivo id
@@ -186,12 +219,16 @@ class PedidoByIdUsuario(APIView):
 
     def post(self, request, id, format=None):
 
-        cliente_id = request.data['cliente_id']
+        try:
+            cliente_id = request.data['cliente_id']
+        except:
+            raise ValidationError
 
         usuario = usuarioService.getById(id)
         cliente = clienteService.getById(id=cliente_id)
 
-        pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente, rentabilidade=TipoRentabilidade.SR)
+        pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente,
+        rentabilidade=TipoRentabilidade.SR)
 
         try:
             pedido.save()

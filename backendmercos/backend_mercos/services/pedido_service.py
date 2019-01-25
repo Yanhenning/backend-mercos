@@ -11,6 +11,11 @@ def getById(id):
 def getAll():
     return PedidoModel.objects.all()
 
+def atualizerPedido(pedido, itemPedido):
+    pedido.valor += itemPedido.receita
+    pedido.quantidadeItem += itemPedido.quantidadeProduto
+    pedido.rentabilidade = itemPedido.rentabilidade
+    pedido.save()
 
 def getAllByUsuarioId(usuario_id):
     try:

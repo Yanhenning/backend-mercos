@@ -13,4 +13,5 @@ urlpatterns = [
     path('itempedido/<int:id>',views.ItemPedidoById.as_view(), name='itemPedido_by_id'),
     path('cliente/<int:id>', views.ClienteById.as_view(), name='cliente_by_id'),
     path('usuario/<int:id>/pedido/', views.PedidoByIdUsuario.as_view(), name='pedidos_cliente'),
+    path('pedido/<int:id>/itempedido/', views.ItemPedido.as_view(), name='item_pedido'),
 ]
