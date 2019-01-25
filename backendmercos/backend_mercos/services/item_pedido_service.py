@@ -6,13 +6,13 @@ from django.http import Http404
 
 def calcularRentabilidade(preco, precoCliente):
     if precoCliente > preco:
-        return TipoRentabilidade.RO
+        return TipoRentabilidade.RO.value
     if (precoCliente >= (preco - preco*0.10)) & (precoCliente <= preco):
-        return TipoRentabilidade.RB
+        return TipoRentabilidade.RB.value
     if precoCliente < (preco - preco*0.10):
-        return TipoRentabilidade.RR
+        return TipoRentabilidade.RR.value
     else:
-        return TipoRentabilidade.SR
+        return TipoRentabilidade.SR.value
 
 def permitirVendaMultiplo(quantidadeVendaMinima, quantidadeProduto):
     if quantidadeVendaMinima == 0:
@@ -30,7 +30,7 @@ def getById(id):
         raise Http404
 
 def getAllByPedidoId(pedido_id):
-    return ItemPedidoModel.objects.get(pedido__id=pedido_id)
+    return ItemPedidoModel.objects.filter(pedido__id=pedido_id)
 
 def calcularLucro(preco, precoCliente, quantidade):
     return ((precoCliente - preco) * quantidade)

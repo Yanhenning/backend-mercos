@@ -158,8 +158,8 @@ class ItemPedido(APIView):
         if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
             pedido = pedidoService.getById(id)
             rentabilidade = itemPedidoService.calcularRentabilidade(preco, precoCliente)
-            if rentabilidade == TipoRentabilidade.RR:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            if rentabilidade == TipoRentabilidade.RR.value:
+                raise ValidationError("Itens de rentabilidade ruim não podem ser adicionados")
             else:
                 item = ItemPedidoModel.objects.create_item(pedido=pedido, nomeProduto=nomeProduto,
                 preco=preco,precoCliente=precoCliente,quantidadeProduto=quantidade,
@@ -195,8 +195,8 @@ class ItemPedidoById(APIView):
 
         if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
             rentabilidade = itemPedidoService.calcularRentabilidade(itemPedido.preco, precoCliente)
-            if rentabilidade == TipoRentabilidade.RR:
-                return Response(status=status.HTTP_400_BAD_REQUEST)
+            if rentabilidade == TipoRentabilidade.RR.value:
+                raise ValidationError("Itens de rentabilidade ruim não podem ser adicionados")
             else:
                 if quantidade!="":
                     itemPedido.quantidadeProduto = quantidade

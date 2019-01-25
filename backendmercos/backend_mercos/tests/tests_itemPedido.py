@@ -261,25 +261,25 @@ class ItemPedidoService(APITestCase):
         preco = 100
         preco_cliente = 100.1
         rentabilidade = itemPedidoService.calcularRentabilidade(preco, preco_cliente)
-        self.assertEqual(TipoRentabilidade.RO, rentabilidade)
+        self.assertEqual(TipoRentabilidade.RO.value, rentabilidade)
 
     def test_precocliente10Abaixo_quandoCalcularRentabilidade_rentabilidadeBoa(self):
         preco = 100
         preco_cliente = 90
         rentabilidade = itemPedidoService.calcularRentabilidade(preco, preco_cliente)
-        self.assertEqual(TipoRentabilidade.RB, rentabilidade)
+        self.assertEqual(TipoRentabilidade.RB.value, rentabilidade)
 
     def test_precoclienteIgualPrecoProduto_quandoCalcularRentabilidade_rentabilidadeBoa(self):
         preco = 100
         preco_cliente = 100
         rentabilidade = itemPedidoService.calcularRentabilidade(preco, preco_cliente)
-        self.assertEqual(TipoRentabilidade.RB, rentabilidade)
+        self.assertEqual(TipoRentabilidade.RB.value, rentabilidade)
 
     def test_precoclienteMenor10PerctPrecoProduto_quandoCalcularRentabilidade_rentabilidadeBoa(self):
         preco = 100
         preco_cliente = 89.9
         rentabilidade = itemPedidoService.calcularRentabilidade(preco, preco_cliente)
-        self.assertEqual(TipoRentabilidade.RR, rentabilidade)
+        self.assertEqual(TipoRentabilidade.RR.value, rentabilidade)
 
     def test_dadoProdutoSemCompraMinima_quandoQualquerQuantidade_entaoProdutoCompravel(self):
         compra_minima = 0
