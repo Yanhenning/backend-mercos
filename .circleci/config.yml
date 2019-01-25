@@ -35,9 +35,8 @@ jobs:
       - run:
           command: |
             cd backendmercos
-            pip
             pipenv run "python manage.py test"
-            pipenv run "coverage manage.py test"
+            pipenv run "coverage run manage.py test"
             bash <(curl -s https://codecov.io/bash)
       - run: |
           coverage combine
