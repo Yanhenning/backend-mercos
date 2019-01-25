@@ -207,6 +207,25 @@ class PedidoById(APIView):
         serializer = PedidoDetail(pedido)
         return Response(serializer.data)
 
+    def put(self, request, id, format=None):
+        pedido = pedidoService.getById(id)
+
+        try:
+            cliente_id = request.data['cliente_id']
+        except:
+            return Response(HTTP_400_BAD_REQUEST)
+
+        pedido.cliente = clienteService.getById(cliente_id)
+        pedido.save()
+        serializer = PedidoDetail(pedido)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, id, format=None):
+        pedido = pedidoService.getById(id)
+        pedido.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 class PedidoByIdUsuario(APIView):
     '''
     GET: Retorna todos os pedidos do usuario com respectivo id

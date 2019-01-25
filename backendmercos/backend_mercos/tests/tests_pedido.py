@@ -25,6 +25,7 @@ class PedidoTest(APITestCase):
         usuario1 = Usuario.objects.create(id=1, nome="Yan Henning", email="yanhenning@gmail.com",senha="111111")
         usuario2 = Usuario.objects.create(id=2, nome="Fred", email="fred@example.com",senha="222222")
 
+        Pedido.objects.create(id=4, usuario=usuario2, cliente=cliente2)
 
     def test_dadoPedidos_quandoBuscarPedidosUsuario_entaoPedidosEncontrados(self):
         url = reverse('pedidos_cliente', kwargs={'id':1})
@@ -69,6 +70,37 @@ class PedidoTest(APITestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_dadoUsuario_quandoEditarPedido_entaoPedidoEditado(self):
+        url = reverse('pedido_by_id', kwargs={'id':4})
+        data = {'cliente_id':1}
+        response = self.client.put(url, data, format='json')
+
+        cliente = Cliente.objects.get(id=data['cliente_id'])
+
+        pedido = Pedido.objects.get(id=4)
+
+        pedido.cliente = cliente
+        serializer = PedidoDetail(pedido)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['usuario'], serializer.data['usuario'])
+        self.assertEqual(response.data['cliente'], serializer.data['cliente'])
+        self.assertEqual(response.data['rentabilidade'], serializer.data['rentabilidade'])
+
+    def test_dadoUsuario_quandoDeletarPedido_entaoPedidoDeletado(self):
+        url = reverse('pedido_by_id', kwargs={'id':4})
+
+        response = self.client.delete(url,format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_dadoUsuario_quandoDeletarPedidoNaoExistente_entaoRetorna404(self):
+        url = reverse('pedido_by_id', kwargs={'id':99})
+
+        response = self.client.delete(url,format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 class PedidoServiceTest(APITestCase):
 

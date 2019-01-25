@@ -11,12 +11,3 @@ class Pedido(models.Model):
     valor = models.BigIntegerField(default=0)
     rentabilidade = models.CharField(max_length=60,
     choices = [(tag, tag.value) for tag in TipoRentabilidade])
-
-    def getRentabilidade(self):
-        return self.rentabilidade
-
-    def getValor(self):
-        return self.valor
-
-    def getQuantidadeItens(self):
-        return self.quantidade_item
