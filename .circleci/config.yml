@@ -38,7 +38,6 @@ jobs:
             pip
             pipenv run "python manage.py test"
       - run: |
-          coverage erase
           make codecov
       - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results
