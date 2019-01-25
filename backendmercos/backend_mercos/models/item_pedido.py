@@ -18,7 +18,7 @@ class ItemPedido(models.Model):
     nomeProduto = models.CharField(max_length=100)
     preco = models.BigIntegerField(default=0)
     precoCliente = models.BigIntegerField()
-    quantidadeProduto = models.BigIntegerField(default=0)
+    quantidadeProduto = models.BigIntegerField(default=1)
     receita = models.BigIntegerField()
     lucro = models.BigIntegerField()
     rentabilidade = models.CharField(max_length=50,

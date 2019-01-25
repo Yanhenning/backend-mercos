@@ -173,13 +173,54 @@ class ItemPedido(APIView):
 class ItemPedidoById(APIView):
     '''
     GET: Retorna o ItemPedido do respectivo id
+    PUT: Edita o ItemPedido do respectivo id
+    DELETE: Deleta o ItemPedido do respectivo id
     '''
 
-    def get(self, request, id,format=None):
+    def get(self, request, id, format=None):
         itemPedido = itemPedidoService.getById(id)
         serializer = ItemPedidoDetail(itemPedido)
         return Response(serializer.data)
 
+    def put(self, request, id, format=None):
+        try:
+            data=request.data
+            quantidade = data['quantidade_produto']
+            precoCliente = data['preco_cliente']
+            compraMinima = data['compra_minima']
+        except:
+            raise ValidationError({"Dados inválidos"})
+
+        itemPedido = itemPedidoService.getById(id)
+
+        if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
+            rentabilidade = itemPedidoService.calcularRentabilidade(itemPedido.preco, precoCliente)
+            if rentabilidade == TipoRentabilidade.RR:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                if quantidade!="":
+                    itemPedido.quantidadeProduto = quantidade
+                if precoCliente!="":
+                    itemPedido.precoCliente = precoCliente
+                itemPedido.lucro = itemPedidoService.calcularLucro(itemPedido.preco, precoCliente, quantidade)
+                itemPedido.rentabilidade = rentabilidade
+                itemPedido.receita = itemPedidoService.calcularReceita(precoCliente, quantidade)
+                pedido = pedidoService.getById(id=itemPedido.pedido_id)
+                pedidoService.atualizerPedido(pedido, itemPedido)
+
+                itemPedido.save()
+
+                serializer = ItemPedidoDetail(itemPedido)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise ValidationError({"A compra deve ser múltiplo de": compraMinima})
+
+
+
+    def delete(self, request, id, format=None):
+        itemPedido = itemPedidoService.getById(id)
+        itemPedido.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 '''
 ####
 Pedido
@@ -229,6 +270,7 @@ class PedidoById(APIView):
 class PedidoByIdUsuario(APIView):
     '''
     GET: Retorna todos os pedidos do usuario com respectivo id
+    POST: Criar um pedido para o usuario com o respectivo id
     '''
 
     def get(self, request, id, format=None):
@@ -253,4 +295,4 @@ class PedidoByIdUsuario(APIView):
             pedido.save()
             return Response(PedidoDetail(pedido).data, status=status.HTTP_201_CREATED)
         except PedidoModel.DoesNotExist:
-            raise Http404
+            raise Response(status=status.HTTP_400_BAD_REQUEST)

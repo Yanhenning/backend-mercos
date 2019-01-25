@@ -33,4 +33,7 @@ def getAllByPedidoId(pedido_id):
     return ItemPedidoModel.objects.get(pedido__id=pedido_id)
 
 def calcularLucro(preco, precoCliente, quantidade):
-    return round((precoCliente - preco)*quantidade,2)
+    return ((precoCliente - preco) * quantidade)
+
+def calcularReceita(precoCliente, quantidade):
+    return (precoCliente * quantidade)
