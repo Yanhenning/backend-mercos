@@ -22,8 +22,6 @@ jobs:
             sudo pip install pipenv
             pipenv install
             pip install --upgrade pip
-            cd backendmercos
-            ls
             pip install -r requirements.txt
             pipenv install -r requirements.txt
       - save_cache: # cache Python dependencies using checksum of Pipfile as the cache-key
@@ -34,7 +32,6 @@ jobs:
             - "/usr/local/lib/python3.6/site-packages"
       - run:
           command: |
-            cd backendmercos
             pipenv run "python manage.py test"
             pipenv run "coverage run manage.py test"
             codecov
