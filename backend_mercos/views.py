@@ -289,7 +289,7 @@ class PedidoByIdUsuario(APIView):
         cliente = clienteService.getById(id=cliente_id)
 
         pedido = PedidoModel.objects.create(usuario=usuario, cliente=cliente,
-        rentabilidade=TipoRentabilidade.SR)
+        rentabilidade=TipoRentabilidade.SR.value)
 
         try:
             pedido.save()
