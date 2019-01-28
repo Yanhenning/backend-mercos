@@ -70,7 +70,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
     'google.com',
     'hostname.example.com',
-    'heroku.app'
+    'heroku.app',
+    'galaxy-store-backend.herokuapp.com',
+    'https://galaxy-store-backend.herokuapp.com',
 )
 
 ROOT_URLCONF = 'backendmercos.urls'
