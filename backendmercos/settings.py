@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'im6*duw2=s@qi8w-&tllk$+cby8ey_&hva5_5@tx%71*d#&&u7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -73,9 +73,12 @@ CORS_ORIGIN_WHITELIST = (
     'heroku.app',
     'galaxy-store-backend.herokuapp.com',
     'https://galaxy-store-backend.herokuapp.com',
+    'galaxy-store.netlify.com',
 )
 
 ROOT_URLCONF = 'backendmercos.urls'
+
+SECURE_SSL_REDIRECT = True
 
 TEMPLATES = [
     {
