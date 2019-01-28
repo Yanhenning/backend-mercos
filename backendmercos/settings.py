@@ -27,9 +27,11 @@ SECRET_KEY = 'im6*duw2=s@qi8w-&tllk$+cby8ey_&hva5_5@tx%71*d#&&u7'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Application definition
+
+
 
 INSTALLED_APPS = [
     'backend_mercos',
@@ -65,8 +67,6 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json'
 }
 '''
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     'google.com',
