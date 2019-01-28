@@ -67,6 +67,8 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
+CORS_URLS_REGEX = r'^/api/.*$'
+SECURE_SSL_REDIRECT = True
 
 CORS_ORIGIN_WHITELIST = (
     'google.com',
@@ -79,7 +81,7 @@ CORS_ORIGIN_WHITELIST = (
 
 ROOT_URLCONF = 'backendmercos.urls'
 
-SECURE_SSL_REDIRECT = True
+
 
 TEMPLATES = [
     {
