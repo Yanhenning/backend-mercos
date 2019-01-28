@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'im6*duw2=s@qi8w-&tllk$+cby8ey_&hva5_5@tx%71*d#&&u7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -69,7 +69,7 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = False
 CORS_URLS_REGEX = r'^/api/.*$'
-#SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = True
 
 CORS_ORIGIN_WHITELIST = (
     'google.com',
