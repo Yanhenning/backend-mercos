@@ -221,7 +221,7 @@ class ItemPedidoById(APIView):
         itemPedido = itemPedidoService.getById(id)
         pedido = pedidoService.getById(id=itemPedido.pedido_id)
         receita = itemPedido.receita
-        quantidade = itemPedido.quantidade
+        quantidade = itemPedido.quantidadeProduto
         #TODO implement rentabilidade
         itemPedido.delete()
         pedido.valor -= receita
