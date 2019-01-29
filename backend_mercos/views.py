@@ -226,6 +226,7 @@ class ItemPedidoById(APIView):
         itemPedido.delete()
         pedido.valor -= receita
         pedido.quantidadeItem -= quantidade
+        pedido.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 '''
 ####
