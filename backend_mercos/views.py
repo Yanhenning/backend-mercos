@@ -219,7 +219,13 @@ class ItemPedidoById(APIView):
 
     def delete(self, request, id, format=None):
         itemPedido = itemPedidoService.getById(id)
+        pedido = pedidoService.getById(id=itemPedido.pedido_id)
+        receita = itemPedido.receita
+        quantidade = itemPedido.quantidade
+        #TODO implement rentabilidade
         itemPedido.delete()
+        pedido.valor -= receita
+        pedido.quantidadeItem -= quantidade
         return Response(status=status.HTTP_204_NO_CONTENT)
 '''
 ####
