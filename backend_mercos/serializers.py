@@ -85,7 +85,7 @@ class ItemPedidoDetail(serializers.ModelSerializer):
     class Meta:
         model = ItemPedido
         fields = ('id', 'nomeProduto', 'preco', 'precoCliente' ,'quantidadeProduto', 'receita',
-        'lucro', 'rentabilidade')
+        'lucro', 'rentabilidade', 'multiplo')
 
 '''
 ####
