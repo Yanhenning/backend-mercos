@@ -46,13 +46,12 @@ Produto
 '''
 class ProdutoSerializer(serializers.ModelSerializer):
     nome = serializers.CharField(max_length=200, required = True)
-    compra_minima = serializers.CharField(max_length=50, required=True)
+    multiplo = serializers.CharField(max_length=50, required=True)
     preco = serializers.CharField(max_length=300, required=True)
 
     class Meta:
         model = Produto
         fields = ('id', 'nome', 'compra_minima', 'preco')
-
 
 '''
 ####
@@ -106,7 +105,7 @@ class PedidoListSerializer(serializers.ModelSerializer):
 class PedidoDetail(serializers.ModelSerializer):
     usuario = serializers.CharField(max_length=200, required = True)
     cliente = serializers.CharField(max_length=200, required = True)
-    quantidadeItem = serializers.CharField(max_length=50, required=True)
+    multiplo = serializers.CharField(max_length=50, required=True)
     valor = serializers.CharField(max_length=200, required=True)
     rentabilidade = serializers.CharField(source='get_rentabilidade_display')
 
