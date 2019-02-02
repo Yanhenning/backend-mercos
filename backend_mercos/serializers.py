@@ -80,6 +80,7 @@ class ItemPedidoDetail(serializers.ModelSerializer):
     receita = serializers.CharField(max_length=30, required=True)
     lucro = serializers.CharField(max_length=30, required=True)
     rentabilidade = serializers.CharField(source='get_rentabilidade_display')
+    multiplo = serializers.CharField(max_length=40)
 
     class Meta:
         model = ItemPedido

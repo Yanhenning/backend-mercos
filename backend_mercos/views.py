@@ -151,11 +151,11 @@ class ItemPedido(APIView):
             preco = data['preco']
             precoCliente = data['preco_cliente']
             quantidade = data['quantidade_produto']
-            compraMinima = data['compra_minima']
+            multiplo = data['multiplo']
         except:
             raise ValidationError("Dados inválidos")
 
-        if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
+        if itemPedidoService.permitirVendaMultiplo(multiplo, quantidade):
             pedido = pedidoService.getById(id)
             rentabilidade = itemPedidoService.calcularRentabilidade(preco, precoCliente)
             if rentabilidade == TipoRentabilidade.RR.value:
@@ -163,12 +163,12 @@ class ItemPedido(APIView):
             else:
                 item = ItemPedidoModel.objects.create_item(pedido=pedido, nomeProduto=nomeProduto,
                 preco=preco,precoCliente=precoCliente,quantidadeProduto=quantidade,
-                rentabilidade=rentabilidade)
+                rentabilidade=rentabilidade,multiplo=multiplo)
                 pedidoService.atualizerPedido(pedido, item)
                 serializer = ItemPedidoDetail(item)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            raise ValidationError({"A compra deve ser múltiplo de": compraMinima})
+            raise ValidationError({"A compra deve ser múltiplo de": multiplo})
 
 class ItemPedidoById(APIView):
     '''
@@ -187,13 +187,13 @@ class ItemPedidoById(APIView):
             data=request.data
             quantidade = data['quantidade_produto']
             precoCliente = data['preco_cliente']
-            compraMinima = data['compra_minima']
+            multiplo = data['multiplo']
         except:
             raise ValidationError({"Dados inválidos"})
 
         itemPedido = itemPedidoService.getById(id)
 
-        if itemPedidoService.permitirVendaMultiplo(compraMinima, quantidade):
+        if itemPedidoService.permitirVendaMultiplo(multiplo, quantidade):
             rentabilidade = itemPedidoService.calcularRentabilidade(itemPedido.preco, precoCliente)
             if rentabilidade == TipoRentabilidade.RR.value:
                 raise ValidationError("Itens de rentabilidade ruim não podem ser adicionados")
@@ -213,7 +213,7 @@ class ItemPedidoById(APIView):
                 serializer = ItemPedidoDetail(itemPedido)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            raise ValidationError({"A compra deve ser múltiplo de": compraMinima})
+            raise ValidationError({"A compra deve ser múltiplo de": multiplo})
 
 
 
