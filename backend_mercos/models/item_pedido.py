@@ -6,10 +6,10 @@ from backend_mercos.enums_merc import TipoRentabilidade
 
 
 class ItemPedidoManager(models.Manager):
-    def create_item(self, pedido, nomeProduto, preco, precoCliente, quantidadeProduto, rentabilidade):
+    def create_item(self, pedido, nomeProduto, preco, precoCliente, quantidadeProduto, rentabilidade,multiplo):
         itemPedido = self.create(pedido=pedido, nomeProduto=nomeProduto,quantidadeProduto=quantidadeProduto,
          preco=preco, precoCliente=precoCliente,receita=precoCliente*quantidadeProduto,
-         lucro= ((precoCliente - preco)*quantidadeProduto),rentabilidade=rentabilidade)
+         lucro= ((precoCliente - preco)*quantidadeProduto),rentabilidade=rentabilidade, multiplo=multiplo)
         return itemPedido
 
 
