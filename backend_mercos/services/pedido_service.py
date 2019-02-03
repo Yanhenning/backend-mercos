@@ -1,5 +1,8 @@
 from ..models.cliente import Cliente as ClienteModel
 from ..models.pedido import Pedido as PedidoModel
+from ..services.item_pedido_service import getAllByPedidoId
+from backend_mercos.enums_merc import TipoRentabilidade
+
 from django.http import Http404
 
 def getById(id):
@@ -14,7 +17,14 @@ def getAll():
 def atualizerPedido(pedido, itemPedido):
     pedido.valor += itemPedido.receita
     pedido.quantidadeItem += itemPedido.quantidadeProduto
-    pedido.rentabilidade = itemPedido.rentabilidade
+    itemPedidos = getAllByPedidoId(pedido.id)
+    lucro = 0
+    for item in itemPedidos:
+        lucro += item['lucro']
+    if lucro>=0:
+        pedido.rentabilidade = TipoRentabilidade.RO.value
+    else:
+        pedido.rentabilidade = TipoRentabilidade.RB.value
     pedido.save()
 
 def getAllByUsuarioId(usuario_id):
@@ -22,3 +32,6 @@ def getAllByUsuarioId(usuario_id):
         return PedidoModel.objects.filter(usuario__id=usuario_id)
     except PedidoModel.DoesNotExist:
         raise Http404
+
+def atualizarRentabilidade(pedido):
+        pedido.save()
