@@ -30,7 +30,7 @@ def atualizarRentabilidade(pedido):
     itemPedidos = getAllByPedidoId(pedido.id)
     lucro = 0
     for item in itemPedidos:
-        lucro += item['lucro']
+        lucro += item.lucro
     if lucro>=0:
         pedido.rentabilidade = TipoRentabilidade.RO.value
     else:
