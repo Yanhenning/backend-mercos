@@ -206,10 +206,12 @@ class ItemPedidoById(APIView):
                 itemPedido.rentabilidade = rentabilidade
                 itemPedido.receita = itemPedidoService.calcularReceita(precoCliente, quantidade)
                 pedido = pedidoService.getById(id=itemPedido.pedido_id)
-                itemPedido.save()
-                
+
                 pedidoService.atualizerPedido(pedido, itemPedido)
 
+                itemPedido.save()
+
+                pedidoService.atualizarRentabilidade(pedido)
                 serializer = ItemPedidoDetail(itemPedido)
                 return Response(serializer.data, status=status.HTTP_200_OK)
         else:

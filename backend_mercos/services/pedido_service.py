@@ -17,14 +17,7 @@ def getAll():
 def atualizerPedido(pedido, itemPedido):
     pedido.valor += itemPedido.receita
     pedido.quantidadeItem += itemPedido.quantidadeProduto
-    itemPedidos = getAllByPedidoId(pedido.id)
-    lucro = 0
-    for item in itemPedidos:
-        lucro += item['lucro']
-    if lucro>=0:
-        pedido.rentabilidade = TipoRentabilidade.RO.value
-    else:
-        pedido.rentabilidade = TipoRentabilidade.RB.value
+    pedido.rentabilidade = itemPedido.rentabilidade
     pedido.save()
 
 def getAllByUsuarioId(usuario_id):
@@ -34,4 +27,12 @@ def getAllByUsuarioId(usuario_id):
         raise Http404
 
 def atualizarRentabilidade(pedido):
-        pedido.save()
+    itemPedidos = getAllByPedidoId(pedido.id)
+    lucro = 0
+    for item in itemPedidos:
+        lucro += item['lucro']
+    if lucro>=0:
+        pedido.rentabilidade = TipoRentabilidade.RO.value
+    else:
+        pedido.rentabilidade = TipoRentabilidade.RB.value
+    pedido.save()
