@@ -17,11 +17,11 @@ class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     nomeProduto = models.CharField(max_length=100)
     preco = models.BigIntegerField(default=0)
-    precoCliente = models.BigIntegerField()
+    precoCliente = models.FloatField()
     quantidadeProduto = models.BigIntegerField(default=1)
-    receita = models.BigIntegerField()
+    receita = models.FloatField()
     multiplo = models.BigIntegerField()
-    lucro = models.BigIntegerField()
+    lucro = models.FloatField()
     rentabilidade = models.CharField(max_length=50,
      choices = [(tag, tag.value) for tag in TipoRentabilidade])
 
