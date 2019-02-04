@@ -3,6 +3,7 @@ from .pedido import Pedido
 from .produto import Produto
 from enum import Enum
 from backend_mercos.enums_merc import TipoRentabilidade
+from django.utils import timezone
 
 
 class ItemPedidoManager(models.Manager):
@@ -11,7 +12,6 @@ class ItemPedidoManager(models.Manager):
          preco=preco, precoCliente=precoCliente,receita=precoCliente*quantidadeProduto,
          lucro= ((precoCliente - preco)*quantidadeProduto),rentabilidade=rentabilidade, multiplo=multiplo)
         return itemPedido
-
 
 class ItemPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
@@ -22,6 +22,8 @@ class ItemPedido(models.Model):
     receita = models.FloatField()
     multiplo = models.BigIntegerField()
     lucro = models.FloatField()
+    created_at = models.DateField(editable=False)
+    modified_at = models.DateField()
     rentabilidade = models.CharField(max_length=50,
      choices = [(tag, tag.value) for tag in TipoRentabilidade])
 
@@ -34,3 +36,10 @@ class ItemPedido(models.Model):
 
     def getPrecoCliente(self):
         return self.precoCliente
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ItemPedido, self).save(*args, **kwargs)
