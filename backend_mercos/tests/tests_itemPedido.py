@@ -34,7 +34,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=1)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minima':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'preco_cliente':550000,
                     'quantidade_produto':1
@@ -58,7 +58,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=1)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minima':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'preco_cliente':550001,
                     'quantidade_produto':1
@@ -82,7 +82,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=1)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minima':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'preco_cliente':30000,
                     'quantidade_produto':1
@@ -97,7 +97,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=2)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minima':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'preco_cliente':60000,
                     'quantidade_produto':8
@@ -123,7 +123,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=2)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minima':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'preco_cliente':60000,
                     'quantidade_produto':7
@@ -138,7 +138,7 @@ class ItemPedidoTest(APITestCase):
         produto = Produto.objects.get(id=2)
 
         data = {'nome_produto':produto.nome,
-                    'compra_minimaa':produto.compra_minima,
+                    'multiplo':produto.compra_minima,
                     'preco':produto.preco,
                     'precoCliente':60000,
                     'quantidadeProduto':7
@@ -148,7 +148,7 @@ class ItemPedidoTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_dadoItemPedido_quandoEditarItem_entaoItemAtualizado(self):
-        url = reverse('itemPedido_by_id', kwargs={'id':1})
+
 
         precoCliente = 550000
         quantidade = 1
@@ -158,10 +158,13 @@ class ItemPedidoTest(APITestCase):
 
         rentabilidade = itemPedidoService.calcularRentabilidade(produto.preco, precoCliente)
 
-        ItemPedido.objects.create_item(pedido=pedido,nomeProduto=produto.nome,preco=produto.preco,
-        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade)
+        item = ItemPedido.objects.create_item(pedido=pedido,nomeProduto=produto.nome,preco=produto.preco,
+        precoCliente=precoCliente,quantidadeProduto=quantidade,
+        rentabilidade=rentabilidade, multiplo=produto.compra_minima)
 
-        data = {'compra_minima':produto.compra_minima,
+        url = reverse('itemPedido_by_id', kwargs={'id':item.id})
+
+        data = {'multiplo':produto.compra_minima,
                 'preco_cliente':550001,
                 'quantidade_produto':2}
 
@@ -190,9 +193,10 @@ class ItemPedidoTest(APITestCase):
         rentabilidade = itemPedidoService.calcularRentabilidade(produto.preco, precoCliente)
 
         ItemPedido.objects.create_item(pedido=pedido,nomeProduto=produto.nome,preco=produto.preco,
-        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade)
+        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade
+        ,multiplo=produto.compra_minima)
 
-        data = {'compra_minima':produto.compra_minima,
+        data = {'multiplo':produto.compra_minima,
                 'preco_cliente':60000,
                 'quantidade_produto':2}
 
@@ -221,7 +225,8 @@ class ItemPedidoTest(APITestCase):
         rentabilidade = itemPedidoService.calcularRentabilidade(produto.preco, precoCliente)
 
         ItemPedido.objects.create_item(pedido=pedido,nomeProduto=produto.nome,preco=produto.preco,
-        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade)
+        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade
+        ,multiplo=produto.compra_minima)
 
         data = {'compra_minima':produto.compra_minima,
                 'preco_cliente':60000,
@@ -244,7 +249,8 @@ class ItemPedidoTest(APITestCase):
         rentabilidade = itemPedidoService.calcularRentabilidade(produto.preco, precoCliente)
 
         ItemPedido.objects.create_item(pedido=pedido,nomeProduto=produto.nome,preco=produto.preco,
-        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade)
+        precoCliente=precoCliente,quantidadeProduto=quantidade, rentabilidade=rentabilidade
+        ,multiplo=produto.compra_minima)
 
         data = {'compra_minima':produto.compra_minima,
                 'preco_cliente':10000,
