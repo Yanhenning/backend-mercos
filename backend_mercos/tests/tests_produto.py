@@ -23,18 +23,6 @@ class ProdutoTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_dadoProduto_quandoCriarProduto_entaoProdutoCriado(self):
-        url = reverse('produto')
-        data = {
-        "nome": "Millenium Hawk",
-        "compra_minima": "2",
-        "preco": "2600"
-    }
-        serializer = ProdutoSerializer(Produto.objects.get(id=1))
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Produto.objects.get(nome=data['nome']).nome, data['nome'])
-
     def test_dadoProdutos_quandoBuscarTodos_entaoEncontrados(self):
         url = reverse('produto')
 
@@ -42,3 +30,17 @@ class ProdutoTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
+
+class TestProdutoCriado(APITestCase):
+
+    def test_dadoProduto_quandoCriarProduto_entaoProdutoCriado(self):
+        url = reverse('produto')
+        data = {
+        "nome": "Millenium Hawk",
+        "compra_minima": "2",
+        "preco": "2600"
+    }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Produto.objects.get(nome=data['nome']).nome, data['nome'])

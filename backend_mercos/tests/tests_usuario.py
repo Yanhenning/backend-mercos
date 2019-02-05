@@ -61,6 +61,8 @@ class UsuarioTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
 
+class UsuarioTestCadastro(APITestCase):
+
     def test_dadoNenhumUsuario_quandoCadastrarUsuario_entaoCadastroCorreto(self):
         url = reverse('usuario')
         data = {"nome": "Yan Henning",

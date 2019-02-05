@@ -23,16 +23,6 @@ class ClienteTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_dadoCliente_quandoCriarCliente_entaoClienteCriado(self):
-        url = reverse('cliente')
-        data = {
-        "nome": "C3-PO"
-    }
-        serializer = ClienteSerializer(Cliente.objects.get(id=1))
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Cliente.objects.get(nome=data['nome']).nome, data['nome'])
-
     def test_dadoClientes_quandoBuscarTodos_entaoEncontrados(self):
         url = reverse('cliente')
 
@@ -40,3 +30,13 @@ class ClienteTest(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data,serializer.data)
+
+class ClienteTestCriado(APITestCase):
+    def test_dadoCliente_quandoCriarCliente_entaoClienteCriado(self):
+        url = reverse('cliente')
+        data = {
+        "nome": "C3-PO"
+    }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Cliente.objects.get(nome=data['nome']).nome, data['nome'])

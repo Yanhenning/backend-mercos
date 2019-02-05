@@ -42,7 +42,6 @@ class ItemPedidoTest(APITestCase):
 
         response = self.client.post(url, data, format='json')
 
-        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         #TODO fix the serializer from query
         self.assertEqual(response.data['nomeProduto'], produto.nome)
@@ -66,7 +65,6 @@ class ItemPedidoTest(APITestCase):
 
         response = self.client.post(url, data, format='json')
 
-        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         #TODO fix the serializer from query
         self.assertEqual(response.data['nomeProduto'], produto.nome)
@@ -105,7 +103,6 @@ class ItemPedidoTest(APITestCase):
 
         response = self.client.post(url, data, format='json')
 
-        serializer = ItemPedidoDetail(ItemPedido.objects.get(id=1))
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         #TODO fix the serializer from query
         self.assertEqual(response.data['nomeProduto'], produto.nome)
